@@ -34,7 +34,7 @@ namespace VPI.Entities
         public string[] Transcripts { get; set; }
 
         public List<ProcessingMessage> ProcessingMessage { get; set; }
-    
+        
         public int StepNumber { get; set; }
 
         public int StepCount { get; set; }
