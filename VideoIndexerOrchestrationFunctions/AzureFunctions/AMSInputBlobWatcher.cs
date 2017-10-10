@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Routing;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace OrchestrationFunctions
 {
-    public static class AMSInputBlobWatcher
+    public static class AMSInputBlobWatcher 
     {
        
         [FunctionName("AMSInputBlobWatcher")]
@@ -42,6 +38,7 @@ namespace OrchestrationFunctions
             if(inputVideoBlob.Name.ToLower().EndsWith(".json"))
                 return;
 
+            var baseHelper=new BaseHelper(log);
             VippyProcessingState manifest;
             try
             {
@@ -49,7 +46,7 @@ namespace OrchestrationFunctions
             }
             catch (Exception e)
             {
-                Globals.LogMessage(log, $"Error with manifest deserialization:{e.Message}");
+                baseHelper.LogMessage( $"Error with manifest deserialization:{e.Message}");
                 //TODO: wrap up nicely for AppInsights
               throw new ApplicationException($"Invalid manifest file provided for video {inputVideoBlob.Name}");
             }
@@ -68,7 +65,7 @@ namespace OrchestrationFunctions
             manifest.StartTime = DateTime.Now;
 
 
-            Globals.LogMessage(log, $"Video '{inputVideoBlob.Name}' landed in watch folder" + (manifestContents != null ? 
+            baseHelper.LogMessage( $"Video '{inputVideoBlob.Name}' landed in watch folder" + (manifestContents != null ? 
                  " with manifest json": "without manifest file"));
 
             await outputQueue.AddAsync(manifest.ToString());

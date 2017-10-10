@@ -63,16 +63,14 @@ namespace OrchestrationFunctions
                 });
             }
 
-            string blobPrefix = null;
-            bool useFlatBlobListing = true;
-            var blobList = sourceBlobContainer.ListBlobs(blobPrefix, useFlatBlobListing, BlobListingDetails.None);
+            var blobList = sourceBlobContainer.ListBlobs(null, true);
             foreach (var sourceBlob in blobList)
             {
                 //log.Info("Source blob : " + (sourceBlob as CloudBlob).Uri.ToString());
                 CloudBlob destinationBlob = destinationBlobContainer.GetBlockBlobReference((sourceBlob as CloudBlob)?.Name);
                 if (destinationBlob.Exists())
                 {
-                    log.Info("Destination blob already exists. Skipping: " + destinationBlob.Uri.ToString());
+                    log.Info("Destination blob already exists. Skipping: " + destinationBlob.Uri);
                 }
                 else
                 {
@@ -94,14 +92,11 @@ namespace OrchestrationFunctions
 
         public static CopyStatus MonitorBlobContainer(CloudBlobContainer destinationBlobContainer)
         {
-            string blobPrefix = null;
-            bool useFlatBlobListing = true;
-            var destBlobList = destinationBlobContainer.ListBlobs(blobPrefix, useFlatBlobListing, BlobListingDetails.Copy);
+            var destBlobList = destinationBlobContainer.ListBlobs(null, true, BlobListingDetails.Copy);
             CopyStatus copyStatus = CopyStatus.Success;
             foreach (var dest in destBlobList)
             {
-                var destBlob = dest as CloudBlob;
-                if(destBlob==null)
+                if (!(dest is CloudBlob destBlob)) return CopyStatus.Failed;
                 if (destBlob.CopyState.Status == CopyStatus.Aborted || destBlob.CopyState.Status == CopyStatus.Failed)
                 {
                     // Log the copy status description for diagnostics and restart copy
@@ -123,7 +118,7 @@ namespace OrchestrationFunctions
         {
             try
             {
-                foreach (var blob in sourceContainer.ListBlobs(String.Empty, true, BlobListingDetails.None, null, null))
+                foreach (var blob in sourceContainer.ListBlobs(string.Empty, true))
                 {
                     //log.Info($"Blob URI: {blob.Uri}");
                     if (blob is CloudBlockBlob sourceBlob)
@@ -152,14 +147,12 @@ namespace OrchestrationFunctions
 
             try
             {
-                foreach (var blob in sourceContainer.ListBlobs(filter, true, BlobListingDetails.None, null, null))
+                foreach (var blob in sourceContainer.ListBlobs(filter, true))
                 {
                     log.Info($"Blob URI: {blob.Uri}");
-                    if (blob is CloudBlockBlob)
-                    {
-                        outputBlob = (CloudBlockBlob)blob;
-                        break;
-                    }
+                    if (!(blob is CloudBlockBlob blockBlob)) continue;
+                    outputBlob = blockBlob;
+                    break;
                 }
             }
             catch (Exception ex)
@@ -172,7 +165,7 @@ namespace OrchestrationFunctions
 
         public static async Task<IAsset> CreateAssetFromBlob(CloudBlockBlob blob, string assetName, TraceWriter log)
         {
-            IAsset newAsset = null;
+            IAsset newAsset;
 
             try
             {
@@ -184,7 +177,7 @@ namespace OrchestrationFunctions
             {
                 log.Info("Copy Failed");
                 log.Info($"ERROR : {ex.Message}");
-                throw ex;
+                throw;
             }
 
             return newAsset;
@@ -259,7 +252,7 @@ namespace OrchestrationFunctions
 
         public static async Task<IAsset> CreateAssetFromBlobMultipleFiles(CloudBlockBlob blob, string assetName, TraceWriter log, List<AssetfileinJson> assetfilesAsset)
         {
-            IAsset newAsset = null;
+            IAsset newAsset;
 
             try
             {
@@ -271,7 +264,7 @@ namespace OrchestrationFunctions
             {
                 log.Info("Copy Failed");
                 log.Info($"ERROR : {ex.Message}");
-                throw ex;
+                throw;
             }
 
             return newAsset;

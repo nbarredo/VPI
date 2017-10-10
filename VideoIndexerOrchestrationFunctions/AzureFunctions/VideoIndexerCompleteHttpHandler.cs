@@ -7,7 +7,6 @@ using Microsoft.Azure.WebJobs.Host;
 using System.Threading.Tasks;
 using System;
 using Newtonsoft.Json;
-using System.Configuration;
 
 namespace OrchestrationFunctions
 {
@@ -28,22 +27,15 @@ namespace OrchestrationFunctions
             [Queue("vi-processing-complete", Connection = "AzureWebJobsStorage")] IAsyncCollector<string> outputQueue
             )
         {
-            Globals.LogMessage(log, "VideoIndexerCompleteHttpHandler function called");
+            var baseHelper=new BaseHelper(log);
+            baseHelper.LogMessage( "VideoIndexerCompleteHttpHandler function called");
 
             var queryParams = req.GetQueryNameValuePairs().ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase);
 
-            string queueJson = "";
-            if (queryParams != null)
-            {
-                queueJson = JsonConvert.SerializeObject(queryParams, Formatting.Indented);
+          
+            string queueJson =JsonConvert.SerializeObject(queryParams, Formatting.Indented);
 
-                await outputQueue.AddAsync(queueJson);
-
-                //foreach (string keyName in queryParams.Keys)
-                //{
-                //    Globals.LogMessage(log,$"Form variable named {keyName} found posted to httpTrigger");
-                //} 
-            }
+            await outputQueue.AddAsync(queueJson);
 
             return req.CreateResponse(HttpStatusCode.OK, queueJson);
         }

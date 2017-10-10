@@ -9,6 +9,8 @@ using Microsoft.Azure.WebJobs.Host;
 using Microsoft.WindowsAzure.MediaServices.Client;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
+using OrchestrationFunctions.Helpers;
+// ReSharper disable ReplaceWithSingleCallToFirstOrDefault
 
 #endregion
 
@@ -31,6 +33,8 @@ namespace OrchestrationFunctions
         public static async Task RunAsync(
             [QueueTrigger("encoding-complete", Connection = "AzureWebJobsStorage")] string myQueueItem, TraceWriter log)
         {
+            var videoIndexerHelper = new VideoIndexerHelper(log);
+            var cosmosHelper = new CosmosHelper(log);
             var msg = JsonConvert.DeserializeObject<NotificationMessage>(myQueueItem);
             if (msg.EventType != NotificationEventType.TaskStateChange)
                 return; // ignore anything but job complete 
@@ -46,33 +50,42 @@ namespace OrchestrationFunctions
                 _context = MediaServicesHelper.Context;
 
                 var job = _context.Jobs.Where(j => j.Id == jobId).FirstOrDefault();
+                if (job == null)
+                {
+                    videoIndexerHelper.LogMessage($"Job for JobId:{jobId} is null");
+                    return;
+                }
                 var task = job.Tasks.Where(l => l.Id == taskId).FirstOrDefault();
-
+                if (task == null)
+                {
+                    videoIndexerHelper.LogMessage($"Task for taskId:{taskId} is null");
+                    return;
+                }
                 var outputAsset = task.OutputAssets[0];
-                var inputAsset = task.InputAssets[0]; 
+                var inputAsset = task.InputAssets[0];
 
                 //// for illustration, lets store the AMS encoding jobs running duration in state
                 //state.CustomProperties.Add("amsProcessingDuration", job.RunningDuration.Seconds.ToString());
-                Globals.LogMessage(log, $"Read policy");
+                cosmosHelper.LogMessage( "Read policy");
                 var readPolicy =
                     _context.AccessPolicies.Create("readPolicy", TimeSpan.FromHours(4), AccessPermissions.Read);
                 var outputLocator = _context.Locators.CreateLocator(LocatorType.Sas, outputAsset, readPolicy);
-                Globals.LogMessage(log, $"Create cloud blob client");
+                cosmosHelper.LogMessage( "Create cloud blob client");
                 var destBlobStorage = CopyBlobHelper.AmsStorageAccount.CreateCloudBlobClient();
-                Globals.LogMessage(log, $"get asset container");
+                cosmosHelper.LogMessage( "get asset container");
                 // Get the asset container reference
                 var outContainerName = new Uri(outputLocator.Path).Segments[1];
                 var outContainer = destBlobStorage.GetContainerReference(outContainerName);
-                Globals.LogMessage(log, $"use largest single mp4 ");
+                cosmosHelper.LogMessage( "use largest single mp4 ");
                 // use largest single mp4 output (highest bitrate) to send to Video Indexer
                 var biggestblob = outContainer.ListBlobs().OfType<CloudBlockBlob>()
                     .Where(b => b.Name.ToLower().EndsWith(".mp4"))
                     .OrderBy(u => u.Properties.Length).Last();
-                Globals.LogMessage(log, $" GetSasUrl ");
-                var sas = Globals.GetSasUrl(biggestblob);
-                Globals.LogMessage(log, $" submit to VI ");
+                cosmosHelper.LogMessage( " GetSasUrl ");
+                var sas = videoIndexerHelper.GetSasUrl(biggestblob);
+                cosmosHelper.LogMessage( " submit to VI ");
                 // Submit processing job to Video Indexer
-                await Globals.SubmitToVideoIndexerAsync(biggestblob.Name, sas, inputAsset.AlternateId, log);
+                await videoIndexerHelper.SubmitToVideoIndexerAsync(biggestblob.Name, sas, inputAsset.AlternateId, log);
             }
         }
 
@@ -91,7 +104,10 @@ namespace OrchestrationFunctions
             // Get a reference to the streaming manifest file from the  
             // collection of files in the asset. 
             var manifestFile = outputAsset.AssetFiles.Where(f => f.Name.ToLower().EndsWith(".ism")).FirstOrDefault();
-
+            if (manifestFile == null)
+            {
+                throw new Exception($"Manifest file not found for asset alternate Id: {outputAsset.AlternateId}");
+            }
             // Create a full URL to the manifest file. Use this for playback
             // in streaming media clients. 
             var urlForClientStreaming = originLocator.Path + manifestFile.Name + "/manifest";

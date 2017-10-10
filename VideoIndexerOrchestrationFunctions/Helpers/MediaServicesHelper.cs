@@ -8,9 +8,10 @@
 using Microsoft.WindowsAzure.MediaServices.Client;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
+
+// ReSharper disable PossibleMultipleEnumeration
+// ReSharper disable UseMethodAny.2
 
 namespace OrchestrationFunctions
 {
@@ -24,7 +25,6 @@ namespace OrchestrationFunctions
 
         // Field for service context.
         private static CloudMediaContext _context = null;
-        private static MediaServicesCredentials _cachedCredentials = null;
 
         public static CloudMediaContext Context { get => _context; set => _context = value; }
 
@@ -32,13 +32,12 @@ namespace OrchestrationFunctions
         {
             // Static class initialization.. get a media context, etc. 
             // Create and cache the Media Services credentials in a static class variable.
-            _cachedCredentials = new MediaServicesCredentials(
-                            _mediaServicesAccountName,
-                            _mediaServicesAccountKey);
+            var cachedCredentials = new MediaServicesCredentials(
+                _mediaServicesAccountName,
+                _mediaServicesAccountKey);
 
             // Used the chached credentials to create CloudMediaContext.
-            Context = new CloudMediaContext(_cachedCredentials);
-
+            Context = new CloudMediaContext(cachedCredentials);
         }
 
         internal static IMediaProcessor GetLatestMediaProcessorByName(string mediaProcessorName)
@@ -66,7 +65,7 @@ namespace OrchestrationFunctions
             var locators = asset.Locators.Where(l => l.Type == LocatorType.OnDemandOrigin && l.ExpirationDateTime > DateTime.UtcNow).OrderByDescending(l => l.ExpirationDateTime);
 
             var se = Context.StreamingEndpoints.AsEnumerable().Where(o => (o.State == StreamingEndpointState.Running) && (CanDoDynPackaging(o))).OrderByDescending(o => o.CdnEnabled);
-
+            
             if (se.Count() == 0) // No running which can do dynpackaging SE. Let's use the default one to get URL
             {
                 se = Context.StreamingEndpoints.AsEnumerable().Where(o => o.Name == "default").OrderByDescending(o => o.CdnEnabled);
@@ -87,20 +86,11 @@ namespace OrchestrationFunctions
         public static Uri GetValidOnDemandPath(IAsset asset)
         {
             var aivalidurls = GetValidPaths(asset);
-            if (aivalidurls != null)
-            {
-                return aivalidurls.FirstOrDefault();
-            }
-            else
-            {
-                return null;
-            }
+            return aivalidurls?.FirstOrDefault();
         }
 
         public static IEnumerable<Uri> GetValidPaths(IAsset asset)
         {
-            IEnumerable<Uri> ValidURIs;
-
             var locators = asset.Locators.Where(l => l.Type == LocatorType.OnDemandOrigin && l.ExpirationDateTime > DateTime.UtcNow).OrderByDescending(l => l.ExpirationDateTime);
 
             var se = Context.StreamingEndpoints.AsEnumerable().Where(o => (o.State == StreamingEndpointState.Running) && (CanDoDynPackaging(o))).OrderByDescending(o => o.CdnEnabled);
@@ -111,36 +101,30 @@ namespace OrchestrationFunctions
             }
 
             var template = new UriTemplate("{contentAccessComponent}/");
-            ValidURIs = locators.SelectMany(l => se.Select(
-                        o =>
-                            template.BindByPosition(new Uri("http://" + o.HostName), l.ContentAccessComponent)))
+            IEnumerable<Uri> ValidURIs = locators.SelectMany(l => se.Select(
+                    o =>
+                        template.BindByPosition(new Uri("http://" + o.HostName), l.ContentAccessComponent)))
                 .ToArray();
 
             return ValidURIs;
         }
 
-        static public bool CanDoDynPackaging(IStreamingEndpoint mySE)
+        public static bool CanDoDynPackaging(IStreamingEndpoint mySE)
         {
             return ReturnTypeSE(mySE) != StreamEndpointType.Classic;
         }
 
-        static public StreamEndpointType ReturnTypeSE(IStreamingEndpoint mySE)
+        public static StreamEndpointType ReturnTypeSE(IStreamingEndpoint mySE)
         {
             if (mySE.ScaleUnits != null && mySE.ScaleUnits > 0)
             {
                 return StreamEndpointType.Premium;
             }
-            else
+            if (new Version(mySE.StreamingEndpointVersion) == new Version("1.0"))
             {
-                if (new Version(mySE.StreamingEndpointVersion) == new Version("1.0"))
-                {
-                    return StreamEndpointType.Classic;
-                }
-                else
-                {
-                    return StreamEndpointType.Standard;
-                }
+                return StreamEndpointType.Classic;
             }
+            return StreamEndpointType.Standard;
         }
 
         public enum StreamEndpointType
@@ -150,34 +134,33 @@ namespace OrchestrationFunctions
             Premium
         }
 
-        public static string ReturnContent(IAssetFile assetFile)
-        {
-            string datastring = null;
+        //public static string ReturnContent(IAssetFile assetFile)
+        //{
+        //    string datastring = null;
 
-            try
-            {
-                string tempPath = System.IO.Path.GetTempPath();
-                string filePath = Path.Combine(tempPath, assetFile.Name);
+        //    try
+        //    {
+        //        string tempPath = System.IO.Path.GetTempPath();
+        //        string filePath = Path.Combine(tempPath, assetFile.Name);
 
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-                assetFile.Download(filePath);
+        //        if (File.Exists(filePath))
+        //        {
+        //            File.Delete(filePath);
+        //        }
+        //        assetFile.Download(filePath);
 
-                StreamReader streamReader = new StreamReader(filePath);
-                Encoding fileEncoding = streamReader.CurrentEncoding;
-                datastring = streamReader.ReadToEnd();
-                streamReader.Close();
+        //        StreamReader streamReader = new StreamReader(filePath);
+        //        datastring = streamReader.ReadToEnd();
+        //        streamReader.Close();
 
-                File.Delete(filePath);
-            }
-            catch
-            {
+        //        File.Delete(filePath);
+        //    }
+        //    catch
+        //    {
 
-            }
+        //    }
 
-            return datastring;
-        }
+        //    return datastring;
+        //}
     }
 }

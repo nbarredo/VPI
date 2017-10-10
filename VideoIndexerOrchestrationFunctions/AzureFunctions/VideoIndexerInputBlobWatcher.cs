@@ -36,7 +36,7 @@
 
 //            // blob filename
 //            var fileName = myBlob.Name;
-//            Globals.LogMessage(log, $"Blob named {fileName} being procesed by BlobWatcher function..");
+//            Globals.LogMessage( $"Blob named {fileName} being procesed by BlobWatcher function..");
 
 
 //            // if metadata json was used, get it's values as a dictionary
@@ -71,11 +71,11 @@
 
 //            // get a SAS url for the blob       
 //            var sasUrl = Globals.GetSasUrl(myBlob);
-//            Globals.LogMessage(log, $"Got SAS url {sasUrl}");
+//            Globals.LogMessage( $"Got SAS url {sasUrl}");
 
 //            // call the api to process the video in VideoIndexer
 //            var videoIndexerUniqueId = Globals.SubmitToVideoIndexerAsync(fileName, sasUrl, globalId, log).Result;
-//            Globals.LogMessage(log, $"VideoId {videoIndexerUniqueId} submitted to Video Indexer!");
+//            Globals.LogMessage( $"VideoId {videoIndexerUniqueId} submitted to Video Indexer!");
 //        }
 //    }
 //}

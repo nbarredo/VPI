@@ -6,7 +6,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.WindowsAzure.MediaServices.Client;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Newtonsoft.Json;
+using OrchestrationFunctions.Helpers;
+// ReSharper disable ReplaceWithSingleCallToFirstOrDefault
 
 namespace OrchestrationFunctions
 {
@@ -37,10 +38,10 @@ namespace OrchestrationFunctions
             //================================================================================
 
             var context = MediaServicesHelper.Context;
-
+            var cosmosHelper = new CosmosHelper(log);
             // only set the starttime if it wasn't already set in blob watcher function (that way
             // it works if the job is iniaited by using this queue directly
-            if(manifest.StartTime == null)
+            if (manifest.StartTime == null)
                 manifest.StartTime = DateTime.Now;
             
             var videofileName = videoBlob.Name;
@@ -94,7 +95,7 @@ namespace OrchestrationFunctions
 
             // Check for existing Notification Endpoint with the name "FunctionWebHook"
             var existingEndpoint = context.NotificationEndPoints.Where(e => e.Name == "FunctionWebHook").FirstOrDefault();
-            INotificationEndPoint endpoint = null;
+            INotificationEndPoint endpoint;
 
             if (existingEndpoint != null)
             {
@@ -124,9 +125,9 @@ namespace OrchestrationFunctions
             job.Submit();
     
             // update processing progress with id and metadata payload
-            await Globals.StoreProcessingStateRecordInCosmosAsync(manifest);
+            await cosmosHelper.StoreProcessingStateRecordInCosmosAsync(manifest);
 
-            Globals.LogMessage(log, $"AMS encoding job submitted for {videofileName}");
+            cosmosHelper.LogMessage( $"AMS encoding job submitted for {videofileName}");
         }
     }
 }
