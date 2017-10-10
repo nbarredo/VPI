@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
+using VPI.Entities;
 
 namespace OrchestrationFunctions
 {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.WebJobs.Host;
+using VPI.Entities;
 
 namespace OrchestrationFunctions.Helpers
 {

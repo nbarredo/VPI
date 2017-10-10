@@ -1,4 +1,4 @@
-﻿namespace OrchestrationFunctions
+﻿namespace VPI.Entities
 {
     public class Properties
     {

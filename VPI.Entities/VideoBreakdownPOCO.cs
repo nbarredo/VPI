@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using Microsoft.Azure.Documents;
+using Newtonsoft.Json;
 
-namespace OrchestrationFunctions
+namespace VPI.Entities
 {
 
     public class VideoBreakdownPOCO :Resource

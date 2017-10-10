@@ -1,7 +1,7 @@
 ﻿using Microsoft.Azure.Documents;
 using Newtonsoft.Json;
 
-namespace OrchestrationFunctions
+namespace VPI.Entities
 {
     public class VippyManifest : Resource
     {

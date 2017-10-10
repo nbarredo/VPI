@@ -15,6 +15,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 using OrchestrationFunctions.Helpers;
+using VPI.Entities;
 
 #endregion
 

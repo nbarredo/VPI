@@ -7,6 +7,8 @@ using Microsoft.Azure.WebJobs.Host;
 using Microsoft.WindowsAzure.MediaServices.Client;
 using Microsoft.WindowsAzure.Storage.Blob;
 using OrchestrationFunctions.Helpers;
+using VPI.Entities;
+
 // ReSharper disable ReplaceWithSingleCallToFirstOrDefault
 
 namespace OrchestrationFunctions

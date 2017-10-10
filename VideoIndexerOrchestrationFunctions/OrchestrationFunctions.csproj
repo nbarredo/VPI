@@ -21,6 +21,9 @@
     <PackageReference Include="windowsazure.mediaservices" Version="4.0.0.4" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\VPI.Entities\VPI.Entities.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web">
