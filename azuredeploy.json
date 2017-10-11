@@ -181,7 +181,7 @@
             "FUNCTIONS_EXTENSION_VERSION": "~1",
             "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]",
             "WEBSITE_CONTENTSHARE": "[toLower(variables('uniqueAppName'))]",
-            "VideoIndexer_Key": "[parameters('videoIndexerAPIKey')]",
+            "VideoIndexerKey": "[parameters('videoIndexerAPIKey')]",
             "VideoIndexerCallbackUrl": "[concat('https://', concat(variables('uniqueAppName'), '.azurewebsites.net'), '/api/vicallback')]",
             "VideoIndexerBlobInputContainer": "vi-input",
             "AmsBlobInputContainer": "ams-encoding-input",

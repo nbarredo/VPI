@@ -51,7 +51,7 @@ namespace OrchestrationFunctions.Helpers
             var client = new HttpClient();
 
             // Video Indexer API key stored in settings (App Settings in Azure Function portal)
-            var videoIndexerKey = ConfigurationManager.AppSettings["VideoIndexer_Key"];
+            var videoIndexerKey = ConfigurationManager.AppSettings["VideoIndexerKey"];
             if (String.IsNullOrEmpty(videoIndexerKey))
                 throw new ApplicationException("VideoIndexerKey app setting not set");
 

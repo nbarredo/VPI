@@ -3,7 +3,7 @@
   "Values": {
     "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=vip3hho4ajmhdn4k;AccountKey=zmGV5903LzsbHg31IdaQsT+W3Kx2RV3oP5lwSFJLmirzSUtIdHxFCIIky0ExcDkm9nvzlLt6C1VabKE0eKRKyg==;EndpointSuffix=core.windows.net",
     "AzureWebJobsDashboard": "DefaultEndpointsProtocol=https;AccountName=vip3hho4ajmhdn4k;AccountKey=zmGV5903LzsbHg31IdaQsT+W3Kx2RV3oP5lwSFJLmirzSUtIdHxFCIIky0ExcDkm9nvzlLt6C1VabKE0eKRKyg==;EndpointSuffix=core.windows.net",
-    "VideoIndexer_Key": "ff97d1a0c69643818d58f4d307ae3ae9",
+    "VideoIndexerKey": "ff97d1a0c69643818d58f4d307ae3ae9",
     "CosmosEndpoint": "https://vip3hho4ajmhdn4k.documents.azure.com:443/",
     "CosmosKey": "kJoXIPm3NdwjAuOKFlB2568V0MYNXqS21KYpIDughk82QnaPRpYjH1JBBqKr3DpHuGVnEOQqg13nvAwRHKEHUw==",
     "CosmosDatabaseName": "VideoBreakdowns",
