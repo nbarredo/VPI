@@ -181,7 +181,7 @@ namespace OrchestrationFunctions
             {
                 Document r =
                     await client.UpsertDocumentAsync(
-                        UriFactory.CreateDocumentCollectionUri(cosmosHelper.CosmosDatabasename, collectionName),
+                        UriFactory.CreateDocumentCollectionUri(CosmosHelper.CosmosDatabasename, collectionName),
                         videoBreakdownJson);
             }
             catch (Exception e)

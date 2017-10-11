@@ -11,8 +11,8 @@ namespace OrchestrationFunctions.Helpers
 {
     public class CosmosHelper : BaseHelper
     {
-        public string ProcessingStateCosmosCollectionName => "VIProcessingState";
-        public string CosmosDatabasename
+        private static string ProcessingStateCosmosCollectionName => "VIProcessingState";
+        public static string CosmosDatabasename
         {
             get
             {
