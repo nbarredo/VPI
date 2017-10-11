@@ -16,9 +16,9 @@ namespace OrchestrationFunctions.Helpers
         {
             get
             {
-                var cosmosDatabaseName = ConfigurationManager.AppSettings["Cosmos_Database_Name"];
+                var cosmosDatabaseName = ConfigurationManager.AppSettings["CosmosDatabaseName"];
                 if (string.IsNullOrEmpty(cosmosDatabaseName))
-                    throw new ApplicationException("Cosmos_Database_Name app setting not set");
+                    throw new ApplicationException("CosmosDatabaseName app setting not set");
                 return cosmosDatabaseName;
             }
         }
@@ -33,9 +33,9 @@ namespace OrchestrationFunctions.Helpers
             if (string.IsNullOrEmpty(endpoint))
                 throw new ApplicationException("Cosmos_Endpoint app setting not set");
 
-            var key = ConfigurationManager.AppSettings["Cosmos_Key"];
+            var key = ConfigurationManager.AppSettings["CosmosKey"];
             if (string.IsNullOrEmpty(key))
-                throw new ApplicationException("Cosmos_Key app setting not set");
+                throw new ApplicationException("CosmosKey app setting not set");
 
             var client = new DocumentClient(new Uri(endpoint), key);
 

@@ -26,7 +26,7 @@ namespace OrchestrationFunctions
 
         [FunctionName("AMSInputQueueHandler")]
         public static async Task Run([QueueTrigger("ams-input", Connection = "AzureWebJobsStorage")] VippyProcessingState manifest,
-            [Blob("%amsBlobInputContainer%/{BlobName}", FileAccess.ReadWrite)] CloudBlockBlob videoBlob,
+            [Blob("%AmsBlobInputContainer%/{BlobName}", FileAccess.ReadWrite)] CloudBlockBlob videoBlob,
             TraceWriter log)
         {
 
@@ -53,12 +53,11 @@ namespace OrchestrationFunctions
             IAsset newAsset;
             try
             {
-                newAsset = CopyBlobHelper.CreateAssetFromBlob(videoBlob,
-                    videoTitle, log).GetAwaiter().GetResult();
+                newAsset =await CopyBlobHelper.CreateAssetFromBlob(videoBlob,
+                    videoTitle, log);//.GetAwaiter().GetResult();
             }
             catch (Exception e)
-            {
-
+            { 
                 throw new ApplicationException($"Error occured creating asset from Blob;/r/n{e.Message}");
             }
 
@@ -91,8 +90,7 @@ namespace OrchestrationFunctions
             task.Priority = 100;
             task.InputAssets.Add(newAsset);
 
-            // setup webhook notification
-            //byte[] keyBytes = Convert.FromBase64String(_signingKey);
+            // setup webhook notification 
             var keyBytes = new byte[32];
 
             // Check for existing Notification Endpoint with the name "FunctionWebHook"
@@ -105,8 +103,7 @@ namespace OrchestrationFunctions
             }
             else
                 try
-                {
-                    //byte[] credential = new byte[64];
+                { 
                     endpoint = context.NotificationEndPoints.Create("FunctionWebHook",
                         NotificationEndPointType.WebHook, WebHookEndpoint, keyBytes);
                 }

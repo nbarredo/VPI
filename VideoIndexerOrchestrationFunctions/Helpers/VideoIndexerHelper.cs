@@ -71,13 +71,13 @@ namespace OrchestrationFunctions.Helpers
         {
             // need to get the processing state to set some of the properties on the VI job
             var state = _cosmosHelper. GetManifestStateRecord(alternateId, log);
-            var props = state.CustomProperties ?? new Properties();
+            var props = state.Properties ?? new Properties();
             var jsonProps = JsonConvert.SerializeObject(props);
             LogMessage( $"props == {jsonProps}");
             LogMessage( $"videoIndexerCallbackUrl");
-            var videoIndexerCallbackUrl = ConfigurationManager.AppSettings["Video_Indexer_Callback_url"];
+            var videoIndexerCallbackUrl = ConfigurationManager.AppSettings["VideoIndexerCallbackUrl"];
             if (String.IsNullOrEmpty(videoIndexerCallbackUrl))
-                throw new ApplicationException("Video_Indexer_Callback_url app setting not set");
+                throw new ApplicationException("VideoIndexerCallbackUrl app setting not set");
 
             var queryString = HttpUtility.ParseQueryString(String.Empty);
 

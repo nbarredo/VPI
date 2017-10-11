@@ -13,9 +13,9 @@ namespace OrchestrationFunctions
     {
        
         [FunctionName("AMSInputBlobWatcher")]
-        public static async Task RunAsync([BlobTrigger("%amsBlobInputContainer%/{name}.{extension}", Connection = 
+        public static async Task RunAsync([BlobTrigger("%AmsBlobInputContainer%/{name}.{extension}", Connection = 
             "AzureWebJobsStorage")] CloudBlockBlob inputVideoBlob,      // video blob that initiated this function
-            [Blob("%amsBlobInputContainer%/{name}.json", FileAccess.Read)] string manifestContents,  // if a json file with the same name exists, it's content will be in this variable.
+            [Blob("%AmsBlobInputContainer%/{name}.json", FileAccess.Read)] string manifestContents,  // if a json file with the same name exists, it's content will be in this variable.
             [Queue("ams-input")] IAsyncCollector<string> outputQueue,   // output queue for async processing and resiliency
             TraceWriter log)
         {
@@ -43,12 +43,21 @@ namespace OrchestrationFunctions
             VippyProcessingState manifest;
             try
             {
-                manifest = JsonConvert.DeserializeObject<VippyProcessingState>(manifestContents);
+                if (!string.IsNullOrEmpty(manifestContents))
+                {
+                    manifest = JsonConvert.DeserializeObject<VippyProcessingState>(manifestContents);
+                    baseHelper.LogMessage($"Manifest present, deserializing");
+                }
+                else
+                {
+                    manifest=new VippyProcessingState();
+                    baseHelper.LogMessage($"Manifest empty");
+                }
             }
             catch (Exception e)
             {
                 baseHelper.LogMessage( $"Error with manifest deserialization:{e.Message}");
-                //TODO: wrap up nicely for AppInsights
+            
               throw new ApplicationException($"Invalid manifest file provided for video {inputVideoBlob.Name}");
             }
                                    

@@ -44,8 +44,8 @@ namespace OrchestrationFunctions
         ///     Simple wrapper to write trace messages with a prefix (makes it more
         ///     readable in the output windows)
         /// </summary>
-        /// <param name="log"></param>
         /// <param name="message"></param>
+        /// <param name="callerFilePath"></param>
         public  void LogMessage(string message, [CallerFilePath] string callerFilePath = "")
         {
             callerFilePath = Path.GetFileName(callerFilePath);

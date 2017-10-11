@@ -41,7 +41,7 @@ namespace VPI.Entities
         /// <summary>
         /// This holds the optional client values passed in via the json manifest
         /// </summary>
-        public  Properties  CustomProperties { get; set; }
+        public  Properties  Properties { get; set; }
 
         public override string ToString()
         {

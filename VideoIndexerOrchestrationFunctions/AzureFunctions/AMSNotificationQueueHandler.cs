@@ -10,6 +10,7 @@ using Microsoft.WindowsAzure.MediaServices.Client;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
 using OrchestrationFunctions.Helpers;
+using VPI.Entities;
 // ReSharper disable ReplaceWithSingleCallToFirstOrDefault
 
 #endregion
@@ -40,10 +41,10 @@ namespace OrchestrationFunctions
                 return; // ignore anything but job complete 
 
 
-            var newJobStateStr = msg.Properties.FirstOrDefault(j => j.Key == "NewState").Value;
-            if (newJobStateStr == "Finished")
+            var newJobStateStr = msg.Properties.FirstOrDefault(j => j.Key == Constants.NEWSTATE).Value;
+            if (newJobStateStr == Enums.StateEnum.Finished.ToString())
             {
-               
+
                 var jobId = msg.Properties["JobId"];
                 var taskId = msg.Properties["TaskId"];
 
@@ -64,26 +65,25 @@ namespace OrchestrationFunctions
                 var outputAsset = task.OutputAssets[0];
                 var inputAsset = task.InputAssets[0];
 
-                //// for illustration, lets store the AMS encoding jobs running duration in state
-                //state.CustomProperties.Add("amsProcessingDuration", job.RunningDuration.Seconds.ToString());
-                cosmosHelper.LogMessage( "Read policy");
+
+                cosmosHelper.LogMessage("Read policy");
                 var readPolicy =
                     _context.AccessPolicies.Create("readPolicy", TimeSpan.FromHours(4), AccessPermissions.Read);
                 var outputLocator = _context.Locators.CreateLocator(LocatorType.Sas, outputAsset, readPolicy);
-                cosmosHelper.LogMessage( "Create cloud blob client");
+                cosmosHelper.LogMessage("Create cloud blob client");
                 var destBlobStorage = CopyBlobHelper.AmsStorageAccount.CreateCloudBlobClient();
-                cosmosHelper.LogMessage( "get asset container");
+                cosmosHelper.LogMessage("get asset container");
                 // Get the asset container reference
                 var outContainerName = new Uri(outputLocator.Path).Segments[1];
                 var outContainer = destBlobStorage.GetContainerReference(outContainerName);
-                cosmosHelper.LogMessage( "use largest single mp4 ");
+                cosmosHelper.LogMessage("use largest single mp4 ");
                 // use largest single mp4 output (highest bitrate) to send to Video Indexer
                 var biggestblob = outContainer.ListBlobs().OfType<CloudBlockBlob>()
                     .Where(b => b.Name.ToLower().EndsWith(".mp4"))
                     .OrderBy(u => u.Properties.Length).Last();
-                cosmosHelper.LogMessage( " GetSasUrl ");
+                cosmosHelper.LogMessage("GetSasUrl");
                 var sas = videoIndexerHelper.GetSasUrl(biggestblob);
-                cosmosHelper.LogMessage( " submit to VI ");
+                cosmosHelper.LogMessage(" submit to VI ");
                 // Submit processing job to Video Indexer
                 await videoIndexerHelper.SubmitToVideoIndexerAsync(biggestblob.Name, sas, inputAsset.AlternateId, log);
             }
@@ -115,16 +115,6 @@ namespace OrchestrationFunctions
 
             return urlForClientStreaming;
         }
-    }
-
-    internal enum NotificationEventType
-    {
-        None = 0,
-        JobStateChange = 1,
-        NotificationEndPointRegistration = 2,
-        NotificationEndPointUnregistration = 3,
-        TaskStateChange = 4,
-        TaskProgress = 5
     }
 
     internal sealed class NotificationMessage

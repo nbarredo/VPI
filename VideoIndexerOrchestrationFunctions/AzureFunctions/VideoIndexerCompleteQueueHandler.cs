@@ -57,6 +57,8 @@ namespace OrchestrationFunctions
          
 
             var taskList = new List<Task>();
+           
+
             // these tasks are network io dependant and can happen in parallel
             //TODO:  setup default languages to be pulled from app settings, but
             //TODO: the languages set in config would override
@@ -166,9 +168,9 @@ namespace OrchestrationFunctions
 
         private static async Task StoreBreakdownJsonInCosmos(VideoBreakdownPOCO videoBreakdownJson, TraceWriter log)
         {
-            //string Cosmos_Collection_Name = ConfigurationManager.AppSettings["Cosmos_Collection_Name"];
-            //if (String.IsNullOrEmpty(Cosmos_Collection_Name))
-            //    throw new ApplicationException("Cosmos_Collection_Name app setting not set");
+            //string CosmosCollectionName = ConfigurationManager.AppSettings["CosmosCollectionName"];
+            //if (String.IsNullOrEmpty(CosmosCollectionName))
+            //    throw new ApplicationException("CosmosCollectionName app setting not set");
             var cosmosHelper=new CosmosHelper(log);
             var collectionName = "Breakdowns";
             var client = cosmosHelper.GetCosmosClient(collectionName);

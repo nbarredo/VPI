@@ -16,8 +16,8 @@
 
 //        [FunctionName("VideoIndexerInputBlobWatcher")]
 //        public static async Task RunAsync(
-//            [BlobTrigger("%videoIndxerBlobInputContainer%/{name}.mp4", Connection = "AzureWebJobsStorage")] CloudBlockBlob myBlob,
-//            [Blob("%videoIndxerBlobInputContainer%/{name}.json", FileAccess.Read)] string manifestContents,  // if a json file with the same name exists, it's content will be in this variable.
+//            [BlobTrigger("%VideoIndexerBlobInputContainer%/{name}.mp4", Connection = "AzureWebJobsStorage")] CloudBlockBlob myBlob,
+//            [Blob("%VideoIndexerBlobInputContainer%/{name}.json", FileAccess.Read)] string manifestContents,  // if a json file with the same name exists, it's content will be in this variable.
 //            string name,
 //            TraceWriter log
 //        )
