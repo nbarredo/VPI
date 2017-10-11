@@ -185,7 +185,7 @@
             "VideoIndexerCallbackUrl": "[concat('https://', concat(variables('uniqueAppName'), '.azurewebsites.net'), '/api/vicallback')]",
             "VideoIndexerBlobInputContainer": "vi-input",
             "AmsBlobInputContainer": "ams-encoding-input",
-            "Cosmos_Endpoint": "[reference(concat('Microsoft.DocumentDb/databaseAccounts/', variables('uniqueAppName'))).documentEndpoint]",
+            "CosmosEndpoint": "[reference(concat('Microsoft.DocumentDb/databaseAccounts/', variables('uniqueAppName'))).documentEndpoint]",
             "CosmosKey": "[listKeys(resourceId('Microsoft.DocumentDb/databaseAccounts', variables('uniqueAppName')), '2015-04-08').primaryMasterKey]",
             "CosmosDatabaseName": "VideoBreakdowns",
             "CosmosCollectionName": "Breakdowns",

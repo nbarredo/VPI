@@ -29,9 +29,9 @@ namespace OrchestrationFunctions.Helpers
         /// <returns></returns>
         private DocumentClient GetCosmosClient()
         {
-            var endpoint = ConfigurationManager.AppSettings["Cosmos_Endpoint"];
+            var endpoint = ConfigurationManager.AppSettings["CosmosEndpoint"];
             if (string.IsNullOrEmpty(endpoint))
-                throw new ApplicationException("Cosmos_Endpoint app setting not set");
+                throw new ApplicationException("CosmosEndpoint app setting not set");
 
             var key = ConfigurationManager.AppSettings["CosmosKey"];
             if (string.IsNullOrEmpty(key))

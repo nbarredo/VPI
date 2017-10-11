@@ -80,7 +80,7 @@ namespace OrchestrationFunctions
             }
         }
 
-        public static async void CopyBlobAsync(CloudBlob sourceBlob, CloudBlob destinationBlob)
+        private static async void CopyBlobAsync(CloudBlob sourceBlob, CloudBlob destinationBlob)
         {
             var signature = sourceBlob.GetSharedAccessSignature(new SharedAccessBlobPolicy
             {
@@ -171,7 +171,7 @@ namespace OrchestrationFunctions
             {
                 Task<IAsset> copyAssetTask = CreateAssetFromBlobAsync(blob, assetName, log);
                 newAsset = await copyAssetTask;
-                //log.Info($"Asset Copied : {newAsset.Id}");
+                log.Info($"Asset Copied : {newAsset.Id}");
             }
             catch (Exception ex)
             {
@@ -188,12 +188,12 @@ namespace OrchestrationFunctions
         /// </summary>
         /// <param name="blob">The specified blob.</param>
         /// <returns>The new asset.</returns>
-        public static async Task<IAsset> CreateAssetFromBlobAsync(CloudBlockBlob blob, string assetName, TraceWriter log)
+        private static async Task<IAsset> CreateAssetFromBlobAsync(CloudBlockBlob blob, string assetName, TraceWriter log)
         {
        
             // Create a new asset. 
             var asset = _context.Assets.Create(blob.Name, AssetCreationOptions.None);
-            //log.Info($"Created new asset {asset.Name}");
+            log.Info($"Created new asset {asset.Name}");
 
             IAccessPolicy writePolicy = _context.AccessPolicies.Create("writePolicy",
                 TimeSpan.FromHours(4), AccessPermissions.Write);
