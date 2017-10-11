@@ -53,8 +53,8 @@ namespace OrchestrationFunctions
             IAsset newAsset;
             try
             {
-                newAsset =await CopyBlobHelper.CreateAssetFromBlob(videoBlob,
-                    videoTitle, log);//.GetAwaiter().GetResult();
+                newAsset =CopyBlobHelper.CreateAssetFromBlob(videoBlob,
+                    videoTitle, log).GetAwaiter().GetResult();
             }
             catch (Exception e)
             { 
