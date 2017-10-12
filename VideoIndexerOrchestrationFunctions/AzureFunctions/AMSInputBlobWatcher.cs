@@ -35,7 +35,7 @@ namespace OrchestrationFunctions
             //================================================================================
             
            
-            await FunctionHelper.ProcessBlogIntoQueue(inputVideoBlob, manifestContents, outputQueue, log);
+            await FunctionHelper.ProcessBlogIntoQueue(inputVideoBlob, manifestContents, outputQueue, log, Enums.OriginEnum.Trigger);
         }
 
         

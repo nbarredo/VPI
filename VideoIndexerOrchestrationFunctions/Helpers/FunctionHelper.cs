@@ -14,7 +14,7 @@ namespace OrchestrationFunctions.Helpers
     public static class FunctionHelper
     {
         public static async Task ProcessBlogIntoQueue(CloudBlockBlob inputVideoBlob, string manifestContents,
-            IAsyncCollector<string> outputQueue, TraceWriter log)
+            IAsyncCollector<string> outputQueue, TraceWriter log, Enums.OriginEnum origin)
         {
             //HACK: This isn't ideal. I'd rather the trigger for this function NOT kick off
             // for json files.  That way all the app insights metrics aren't polluted with 
@@ -49,7 +49,7 @@ namespace OrchestrationFunctions.Helpers
             // Otherwise create a new one
             var internalId = manifest.AlternateId;
             var globalId = !string.IsNullOrEmpty(internalId) ? internalId : Guid.NewGuid().ToString();
-
+            manifest.Origin = origin;
             // stuff it back into the manifest
             manifest.AlternateId = globalId;
 

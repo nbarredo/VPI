@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +27,9 @@ namespace OrchestrationFunctions
 
         [FunctionName("AMSInputQueueHandler")]
         public static async Task Run([QueueTrigger("ams-input", Connection = "AzureWebJobsStorage")] VippyProcessingState manifest,
-            [Blob("%AmsBlobInputContainer%/{BlobName}", FileAccess.ReadWrite)] CloudBlockBlob videoBlob,
+            [Blob("%AmsBlobInputContainer%/{BlobName}", FileAccess.ReadWrite)] CloudBlockBlob videoBlobTriggered,
+            [Blob("%ExistingAmsBlobInputContainer%/{BlobName}", FileAccess.ReadWrite)] CloudBlockBlob videoBlobExisting,
+
             TraceWriter log)
         {
 
@@ -38,26 +41,35 @@ namespace OrchestrationFunctions
             // webhook will be called by AMS which causes the next stage of the pipeline to 
             // continue.
             //================================================================================
-
+            CloudBlockBlob videoBlob = null;
+            if (manifest.Origin == Enums.OriginEnum.Existing)
+                videoBlob = videoBlobExisting;
+            else if (manifest.Origin == Enums.OriginEnum.Trigger)
+                videoBlob = videoBlobTriggered;
+            if (videoBlob == null)
+            {
+                log.Error("There is being an error, videoblog not initialized, not marked as existing or trigger or video is null");
+                return;
+            }
             var context = MediaServicesHelper.Context;
             var cosmosHelper = new CosmosHelper(log);
-            var blobHelper=new BlobHelper(log);
+            
             // only set the starttime if it wasn't already set in blob watcher function (that way
             // it works if the job is iniaited by using this queue directly
             if (manifest.StartTime == null)
                 manifest.StartTime = DateTime.Now;
-            
-            var videofileName = videoBlob.Name; 
+
+            var videofileName = videoBlob.Name;
 
             // get a new asset from the blob, and use the file name if video title attribute wasn't passed.
             IAsset newAsset;
             try
             {
-                newAsset = blobHelper.CreateAssetFromBlob(videoBlob)
+                newAsset = BlobHelper.CreateAssetFromBlob(videoBlob, videofileName, log)
                     .GetAwaiter().GetResult();
             }
             catch (Exception e)
-            { 
+            {
                 throw new ApplicationException($"Error occured creating asset from Blob;/r/n{e.Message}");
             }
 
@@ -70,6 +82,7 @@ namespace OrchestrationFunctions
 
             manifest.AmsAssetId = newAsset.Id;
 
+            log.Info($"Deleting  the file  {videoBlob.Name} from the container");
             // delete the source input from the watch folder
             videoBlob.DeleteIfExists();
 
@@ -103,7 +116,7 @@ namespace OrchestrationFunctions
             }
             else
                 try
-                { 
+                {
                     endpoint = context.NotificationEndPoints.Create("FunctionWebHook",
                         NotificationEndPointType.WebHook, WebHookEndpoint, keyBytes);
                 }
@@ -122,11 +135,11 @@ namespace OrchestrationFunctions
 
             // Starts the job in AMS.  AMS will notify the webhook when it completes
             job.Submit();
-    
+
             // update processing progress with id and metadata payload
             await cosmosHelper.StoreProcessingStateRecordInCosmosAsync(manifest);
 
-            cosmosHelper.LogMessage( $"AMS encoding job submitted for {videofileName}");
+            cosmosHelper.LogMessage($"AMS encoding job submitted for {videofileName}");
         }
     }
 }

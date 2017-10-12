@@ -30,6 +30,7 @@ namespace VPI.Entities
         public DateTime? EndTime { get; set; }
 
         public string ErrorMessage { get; set; }
+        public Enums.OriginEnum Origin { get; set; }
 
         public string[] Transcripts { get; set; }
 

@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using OrchestrationFunctions.Helpers;
+using VPI.Entities;
 
 namespace OrchestrationFunctions.AzureFunctions
 {
@@ -22,13 +24,15 @@ namespace OrchestrationFunctions.AzureFunctions
             TraceWriter log)
         {
             log.Info($"AMSBlobRunner Timer trigger function executed at: {DateTime.Now}");
-            var blobHelper=new BlobHelper(log);
-            var blobInfoList = blobHelper.GetBlobInfo();
-
+            
+            var blobInfoList = BlobHelper.GetBlobInfo();
+            if (blobInfoList == null || !blobInfoList.Any())
+            {
+                return;
+            }
             foreach (var blobInfo in blobInfoList)
             {
-                await FunctionHelper.ProcessBlogIntoQueue(blobInfo.Blob, blobInfo.JsonManifest, outputQueue, log);
-
+                await FunctionHelper.ProcessBlogIntoQueue(blobInfo.Blob, blobInfo.JsonManifest, outputQueue, log, Enums.OriginEnum.Existing);
             }
         }
     }
