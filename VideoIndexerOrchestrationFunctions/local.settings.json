@@ -11,6 +11,7 @@
     "DefaultLanguage": "Spanish",
     "VideoIndexerBlobInputContainer": "vi-input",
     "AmsBlobInputContainer": "ams-encoding-input",
+    "ExistingAmsBlobInputContainer": "ams-encoding-input-existing",
     "VideoIndexerCallbackUrl": "https://vip3hho4ajmhdn4k.azurewebsites.net/api/vicallback",
     // "VideoIndexerCallbackUrl": "http://localhost:7071/api/vicallback",
     // "MediaServicesNotificationWebhookUrl": "http://localhost:7071/api/amscallback",

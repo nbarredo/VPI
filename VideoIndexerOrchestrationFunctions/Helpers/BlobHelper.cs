@@ -15,8 +15,10 @@ using OrchestrationFunctions.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using VPI.Entities;
 
 namespace OrchestrationFunctions
 {
@@ -134,6 +136,39 @@ namespace OrchestrationFunctions
             {
                 Log.Error($"ERROR copying blobs to target output: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Gets all the blobs in the existing container 
+        /// </summary>
+        /// <returns></returns>
+        public List<BlobInfo> GetBlobInfo()
+        {
+            var blobInfoList=new List<BlobInfo>();
+            CloudBlobClient sourceCloudBlobClient = _amstorageAccount.CreateCloudBlobClient();
+            var containerName = Environment.GetEnvironmentVariable("ExistingAmsBlobInputContainer");
+            CloudBlobContainer container = sourceCloudBlobClient.GetContainerReference(containerName);
+            var blobList = container.ListBlobs()
+                .Where(b => b.GetType() == typeof(CloudBlockBlob))
+                .Cast<CloudBlockBlob>()
+            
+                .ToList();
+            if (blobList.Count==0)
+            {
+                return null;
+            } 
+            foreach (var blob in blobList.Where(b => !b.Name.ToLower().EndsWith(".json")))
+            {
+                var blobInfo = new BlobInfo(); 
+                var manifest = blobList
+                    .FirstOrDefault(m => m.Name.GetFileNameWithoutExtension() == blob.Name.GetFileNameWithoutExtension() 
+                    && m.Name.ToLower().EndsWith(".json"));
+                var data = manifest?.DownloadText();
+                blobInfo.Blob = blob;
+                blobInfo.JsonManifest = data; 
+                blobInfoList.Add(blobInfo);
+            }
+            return blobInfoList;
         }
 
         public CloudBlockBlob GetOutputBlob(CloudBlobContainer sourceContainer, string filter )
