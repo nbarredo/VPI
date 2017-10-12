@@ -10,7 +10,7 @@ namespace OrchestrationFunctions
     {
       
      
-        private readonly TraceWriter Log;
+        internal readonly TraceWriter Log;
 
         public BaseHelper(TraceWriter log)
         {

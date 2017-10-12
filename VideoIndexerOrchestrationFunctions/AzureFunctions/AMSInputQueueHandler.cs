@@ -41,20 +41,20 @@ namespace OrchestrationFunctions
 
             var context = MediaServicesHelper.Context;
             var cosmosHelper = new CosmosHelper(log);
+            var blobHelper=new BlobHelper(log);
             // only set the starttime if it wasn't already set in blob watcher function (that way
             // it works if the job is iniaited by using this queue directly
             if (manifest.StartTime == null)
                 manifest.StartTime = DateTime.Now;
             
-            var videofileName = videoBlob.Name;
-            var videoTitle = manifest.videoTitle ?? videofileName;
+            var videofileName = videoBlob.Name; 
 
             // get a new asset from the blob, and use the file name if video title attribute wasn't passed.
             IAsset newAsset;
             try
             {
-                newAsset =CopyBlobHelper.CreateAssetFromBlob(videoBlob,
-                    videoTitle, log).GetAwaiter().GetResult();
+                newAsset = blobHelper.CreateAssetFromBlob(videoBlob)
+                    .GetAwaiter().GetResult();
             }
             catch (Exception e)
             { 

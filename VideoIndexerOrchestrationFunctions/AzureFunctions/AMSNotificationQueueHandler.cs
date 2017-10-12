@@ -71,7 +71,7 @@ namespace OrchestrationFunctions
                     _context.AccessPolicies.Create("readPolicy", TimeSpan.FromHours(4), AccessPermissions.Read);
                 var outputLocator = _context.Locators.CreateLocator(LocatorType.Sas, outputAsset, readPolicy);
                 cosmosHelper.LogMessage("Create cloud blob client");
-                var destBlobStorage = CopyBlobHelper.AmsStorageAccount.CreateCloudBlobClient();
+                var destBlobStorage = BlobHelper.AmsStorageAccount.CreateCloudBlobClient();
                 cosmosHelper.LogMessage("get asset container");
                 // Get the asset container reference
                 var outContainerName = new Uri(outputLocator.Path).Segments[1];

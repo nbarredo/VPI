@@ -26,7 +26,7 @@ namespace OrchestrationFunctions.Helpers
                 if (_videoIndexerResourcesContainer != null) return _videoIndexerResourcesContainer;
 
                 // initialize VI resources container
-                var amsStorageClient = CopyBlobHelper.AmsStorageAccount.CreateCloudBlobClient();
+                var amsStorageClient = BlobHelper.AmsStorageAccount.CreateCloudBlobClient();
                 var imageContainer = amsStorageClient.GetContainerReference("video-indexer-resources");
 
                 if (imageContainer.CreateIfNotExists())
