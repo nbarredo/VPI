@@ -41,7 +41,7 @@ namespace OrchestrationFunctions
             {
                 return null;
             }
-            foreach (var blob in blobList.Where(b => !b.Name.ToLower().EndsWith(".json")))
+            foreach (var blob in blobList)
             {
                 var blobInfo = new BlobInfo();
                 var manifest = blobList
@@ -83,15 +83,24 @@ namespace OrchestrationFunctions
             return sourceCloudBlobClient.GetContainerReference(containerName);
         }
 
-        public static async Task Move(string SourceContainer, string TargetContainer, string fileName)
+        public static async Task Move(string sourceContainerName, string targetContainerName, string fileName, TraceWriter log)
         {
-            CloudBlobClient blobClient = _amstorageAccount.CreateCloudBlobClient();
-            CloudBlobContainer sourceContainer = blobClient.GetContainerReference(SourceContainer);
-            CloudBlobContainer targetContainer = blobClient.GetContainerReference(TargetContainer);
-
-            CloudBlockBlob sourceBlob = sourceContainer.GetBlockBlobReference(fileName);
-            CloudBlockBlob targetBlob = targetContainer.GetBlockBlobReference(fileName);
-            await targetBlob.StartCopyAsync(sourceBlob);
+            try
+            {
+                CloudBlobClient blobClient = _amstorageAccount.CreateCloudBlobClient();
+                CloudBlobContainer sourceContainer = blobClient.GetContainerReference(sourceContainerName);
+                CloudBlobContainer targetContainer = blobClient.GetContainerReference(targetContainerName);
+                log.Info($"moving file {fileName} from { sourceContainerName} to {targetContainerName}");
+                CloudBlockBlob sourceBlob = sourceContainer.GetBlockBlobReference(fileName);
+                CloudBlockBlob targetBlob = targetContainer.GetBlockBlobReference(fileName);
+                var result= await targetBlob.StartCopyAsync(sourceBlob);
+                await sourceBlob.DeleteIfExistsAsync();
+            }
+            catch (Exception)
+            {
+                log.Error($"error moving file {fileName} from { sourceContainerName} to {targetContainerName}");
+                throw;
+            }
         }
 
         public static void CopyBlobsAsync(CloudBlobContainer sourceBlobContainer, CloudBlobContainer destinationBlobContainer, TraceWriter log)

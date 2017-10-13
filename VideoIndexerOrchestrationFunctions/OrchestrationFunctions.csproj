@@ -1,6 +1,6 @@
 ﻿<Project ToolsVersion="15.0" Sdk="Microsoft.NET.Sdk" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <TargetFramework>net47</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="EncodingJob.cs" />
@@ -19,7 +19,6 @@
       <NoWarn>NU1605,NU1603</NoWarn>
     </PackageReference>
     <PackageReference Include="windowsazure.mediaservices" Version="4.0.0.4" />
-    <PackageReference Include="WindowsAzure.Storage" Version="8.5.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VPI.Entities\VPI.Entities.csproj" />

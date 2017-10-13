@@ -32,7 +32,7 @@ namespace OrchestrationFunctions.AzureFunctions
                 {
                     log.Info($"moving file {blobInfo.Blob.Name } from {message.SourceContainer} to {message.TargetContainer}");
                     var source = blobInfo.Blob.Container.Name;
-                    await BlobHelper.Move(source, message.TargetContainer, blobInfo.Blob.Name);
+                    await BlobHelper.Move(source, message.TargetContainer, blobInfo.Blob.Name, log);
                 }
 
                 log.Info($"Move finished ");
