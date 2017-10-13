@@ -19,6 +19,7 @@
       <NoWarn>NU1605,NU1603</NoWarn>
     </PackageReference>
     <PackageReference Include="windowsazure.mediaservices" Version="4.0.0.4" />
+    <PackageReference Include="WindowsAzure.Storage" Version="8.5.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VPI.Entities\VPI.Entities.csproj" />
