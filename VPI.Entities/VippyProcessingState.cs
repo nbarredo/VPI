@@ -7,8 +7,7 @@ namespace VPI.Entities
 {
     public class VippyProcessingState : Resource
     {
-        //[JsonProperty(PropertyName = "id")]
-        //public string Id { get; set; }
+        
         public string AlternateId { get; set; }
 
         public string ProcessingState { get; set; }
