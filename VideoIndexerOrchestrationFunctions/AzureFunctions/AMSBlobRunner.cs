@@ -31,7 +31,7 @@
 //                return;
 //            }
 //            foreach (var blobInfo in blobInfoList)
-//            {
+//            { 
 //                var source = blobInfo.Blob.Container.Name;
 //                var target = Environment.GetEnvironmentVariable("AmsBlobInputContainer");
 //                await BlobHelper.Move(source, target, blobInfo.Blob.Name);
