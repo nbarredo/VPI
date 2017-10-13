@@ -33,8 +33,14 @@ namespace OrchestrationFunctions
             // most likely opt to use the watch folder. 
             // ** NOTE - the json file must be dropped into the container first. 
             //================================================================================
-            
-           
+
+            //HACK: This isn't ideal. I'd rather the trigger for this function NOT kick off
+            // for json files.  That way all the app insights metrics aren't polluted with 
+            // eroneous runs.
+            //TODO: only trigger for video files
+            if (inputVideoBlob.Name.ToLower().EndsWith(".json"))
+                return;
+
             await FunctionHelper.ProcessBlogIntoQueue(inputVideoBlob, manifestContents, outputQueue, log, Enums.OriginEnum.Trigger);
         }
 

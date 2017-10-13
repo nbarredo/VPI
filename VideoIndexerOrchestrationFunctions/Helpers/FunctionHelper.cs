@@ -16,13 +16,7 @@ namespace OrchestrationFunctions.Helpers
         public static async Task ProcessBlogIntoQueue(CloudBlockBlob inputVideoBlob, string manifestContents,
             IAsyncCollector<string> outputQueue, TraceWriter log, Enums.OriginEnum origin)
         {
-            //HACK: This isn't ideal. I'd rather the trigger for this function NOT kick off
-            // for json files.  That way all the app insights metrics aren't polluted with 
-            // eroneous runs.
-            //TODO: only trigger for video files
-            if (inputVideoBlob.Name.ToLower().EndsWith(".json"))
-                return;
-
+           
             var baseHelper = new BaseHelper(log);
             VippyProcessingState manifest;
             try

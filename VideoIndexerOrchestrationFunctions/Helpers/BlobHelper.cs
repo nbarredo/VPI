@@ -27,12 +27,11 @@ namespace OrchestrationFunctions
         static readonly string _storageAccountName = Environment.GetEnvironmentVariable("MediaServicesStorageAccountName");
         static readonly string _storageAccountKey = Environment.GetEnvironmentVariable("MediaServicesStorageAccountKey");
 
-        internal static List<BlobInfo> GetBlobInfo()
+        internal static List<BlobInfo> GetBlobInfo(string sourceContainer)
         {
             var blobInfoList = new List<BlobInfo>();
-            CloudBlobClient sourceCloudBlobClient = _amstorageAccount.CreateCloudBlobClient();
-            var containerName = Environment.GetEnvironmentVariable("ExistingAmsBlobInputContainer");
-            CloudBlobContainer container = sourceCloudBlobClient.GetContainerReference(containerName);
+            CloudBlobClient sourceCloudBlobClient = _amstorageAccount.CreateCloudBlobClient(); 
+            CloudBlobContainer container = sourceCloudBlobClient.GetContainerReference(sourceContainer);
             var blobList = container.ListBlobs()
                 .Where(b => b.GetType() == typeof(CloudBlockBlob))
                 .Cast<CloudBlockBlob>()
@@ -82,6 +81,17 @@ namespace OrchestrationFunctions
             CloudStorageAccount sourceStorageAccount = new CloudStorageAccount(new StorageCredentials(storageAccountName, storageAccountKey), true);
             CloudBlobClient sourceCloudBlobClient = sourceStorageAccount.CreateCloudBlobClient();
             return sourceCloudBlobClient.GetContainerReference(containerName);
+        }
+
+        public static async Task Move(string SourceContainer, string TargetContainer, string fileName)
+        {
+            CloudBlobClient blobClient = _amstorageAccount.CreateCloudBlobClient();
+            CloudBlobContainer sourceContainer = blobClient.GetContainerReference(SourceContainer);
+            CloudBlobContainer targetContainer = blobClient.GetContainerReference(TargetContainer);
+
+            CloudBlockBlob sourceBlob = sourceContainer.GetBlockBlobReference(fileName);
+            CloudBlockBlob targetBlob = targetContainer.GetBlockBlobReference(fileName);
+            await targetBlob.StartCopyAsync(sourceBlob);
         }
 
         public static void CopyBlobsAsync(CloudBlobContainer sourceBlobContainer, CloudBlobContainer destinationBlobContainer, TraceWriter log)
