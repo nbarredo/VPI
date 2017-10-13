@@ -15,9 +15,9 @@ namespace OrchestrationFunctions.AzureFunctions
         {
             try       
             {
-
+                log.Info($"AMSMoveTrigger triggered by message: {myQueueItem} on queue: ams-move-queue ");
                 var message = JsonConvert.DeserializeObject<MoveMessage>(myQueueItem);
-                if (message == null || string.IsNullOrEmpty(message.SourceContainer) || string.IsNullOrEmpty(message.SourceContainer))
+                if (string.IsNullOrEmpty(message?.SourceContainer) || string.IsNullOrEmpty(message.SourceContainer))
                 {
                     log.Error("Message missing parameters or null");
                     return;
@@ -25,6 +25,7 @@ namespace OrchestrationFunctions.AzureFunctions
                 var blobInfoList = BlobHelper.GetBlobInfo(message.SourceContainer);
                 if (blobInfoList == null || !blobInfoList.Any())
                 {
+                    log.Info($"no Files found on target ");
                     return;
                 }
                 foreach (var blobInfo in blobInfoList)
