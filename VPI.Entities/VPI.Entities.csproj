@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.DocumentDB" Version="1.17.0" />
+    <PackageReference Include="Microsoft.Net.Compilers" Version="2.3.2" />
   </ItemGroup>
 
   <ItemGroup>

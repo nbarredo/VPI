@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="2.1.0-beta1" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Http" Version="1.0.0-beta1" />
     <PackageReference Include="Microsoft.Azure.WebJobs.ServiceBus" Version="2.1.0-beta1" />
+    <PackageReference Include="Microsoft.Net.Compilers" Version="2.3.2" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.2">
       <NoWarn>NU1605,NU1603</NoWarn>
     </PackageReference>
