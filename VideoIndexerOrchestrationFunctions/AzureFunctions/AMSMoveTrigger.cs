@@ -13,7 +13,7 @@ namespace OrchestrationFunctions.AzureFunctions
         [FunctionName("AMSMoveTrigger")]
         public static async Task Run([QueueTrigger("ams-move-queue", Connection = "AzureWebJobsStorage")]string myQueueItem, TraceWriter log)
         {
-            try
+            try       
             {
 
                 var message = JsonConvert.DeserializeObject<MoveMessage>(myQueueItem);
