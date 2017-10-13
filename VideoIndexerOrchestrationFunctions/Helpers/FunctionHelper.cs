@@ -22,7 +22,7 @@ namespace OrchestrationFunctions.Helpers
             try
             {
                 if (!string.IsNullOrEmpty(manifestContents))
-                {
+                {   
                     manifest = JsonConvert.DeserializeObject<VippyProcessingState>(manifestContents);
                     baseHelper.LogMessage($"Manifest present, deserializing");
                 }
