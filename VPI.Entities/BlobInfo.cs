@@ -1,10 +1,8 @@
-﻿using Microsoft.WindowsAzure.Storage.Blob;
-
-namespace VPI.Entities
+﻿namespace VPI.Entities
 {
     public class BlobInfo
     {
-        public CloudBlockBlob Blob { get; set; }
+        public Microsoft.WindowsAzure.Storage.Blob.CloudBlockBlob Blob { get; set; }
 
         public string JsonManifest { get; set; }
     }
