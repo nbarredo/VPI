@@ -34,6 +34,8 @@ namespace OrchestrationFunctions.AzureFunctions
                     var source = blobInfo.Blob.Container.Name;
                     await BlobHelper.Move(source, message.TargetContainer, blobInfo.Blob.Name);
                 }
+
+                log.Info($"Move finished ");
             }
             catch (Exception)
             {
