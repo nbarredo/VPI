@@ -53,7 +53,7 @@ namespace OrchestrationFunctions
             }
             var context = MediaServicesHelper.Context;
             var cosmosHelper = new CosmosHelper(log);
-            
+            var toDeleteContainerName = Environment.GetEnvironmentVariable("AmsBlobToDeleteContainer");
             // only set the starttime if it wasn't already set in blob watcher function (that way
             // it works if the job is iniaited by using this queue directly
             if (manifest.StartTime == null)
@@ -82,10 +82,14 @@ namespace OrchestrationFunctions
 
             manifest.AmsAssetId = newAsset.Id;
 
-            log.Info($"Deleting  the file  {videoBlob.Name} from the container");
-            // delete the source input from the watch folder
-            videoBlob.DeleteIfExists();
+            log.Info($"Deleting  the file  {videoBlob.Name} from the container ");
 
+            //move the video to the to delete folder
+            await BlobHelper.Move(videoBlob.Container.Name, toDeleteContainerName, videofileName, log);
+            //move the manifest to the to delete folder
+            string manifestName = videofileName.Remove(videofileName.IndexOf('.')) + ".json";
+            log.Info($"Deleting  the file  {manifestName} from the container ");
+            await BlobHelper.Move(videoBlob.Container.Name, toDeleteContainerName, manifestName, log);
             // copy blob into new asset
             // create the encoding job
             var job = context.Jobs.Create("MES encode from input container - ABR streaming");

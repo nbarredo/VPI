@@ -52,7 +52,7 @@ namespace OrchestrationFunctions
             videoIndexerHelper.LogMessage( $"get state with id: {videoIndexerVideoId}");
             var state = cosmosHelper.GetManifestStateRecordByVideoId(videoIndexerVideoId, log);
             videoIndexerHelper.LogMessage( "create poco from json ");
-            var videoBreakdownPoco = JsonConvert.DeserializeObject<VideoBreakdownPOCO>(json);
+            var videoBreakdownPoco = JsonConvert.DeserializeObject<VideoBreakdown>(json);
 
          
 
@@ -88,7 +88,7 @@ namespace OrchestrationFunctions
 
         }
 
-        private static async Task GetCaptionsVttAsync(string id, VideoBreakdownPOCO videoBreakdownPoco, string language, VideoIndexerHelper videoIndexerHelper)
+        private static async Task GetCaptionsVttAsync(string id, VideoBreakdown videoBreakdownPoco, string language, VideoIndexerHelper videoIndexerHelper)
         {
             var client = videoIndexerHelper.GetVideoIndexerHttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
@@ -118,7 +118,7 @@ namespace OrchestrationFunctions
         /// <param name="poco"></param>
         /// <param name="videoIndexerHelper"></param>
         /// <returns></returns>
-        private static async Task ExtractImages(VideoBreakdownPOCO poco, TraceWriter log, VideoIndexerHelper videoIndexerHelper)
+        private static async Task ExtractImages(VideoBreakdown poco, TraceWriter log, VideoIndexerHelper videoIndexerHelper)
         {
             var baseHelper = new BaseHelper(log); 
             baseHelper.LogMessage( $"start task extract images");
@@ -137,7 +137,7 @@ namespace OrchestrationFunctions
             await Task.WhenAll(poco.summarizedInsights.faces.Select(f => StoreFacesAsync(f, poco, videoIndexerHelper)));
         }
 
-        private static async Task StoreFacesAsync(Face f, VideoBreakdownPOCO poco, VideoIndexerHelper videoIndexerHelper)
+        private static async Task StoreFacesAsync(Face f, VideoBreakdown poco, VideoIndexerHelper videoIndexerHelper)
         {
             var faceStream = await DownloadWebResource(f.thumbnailFullUrl);
             var blob = await UploadFileToBlobStorage(faceStream, $"{poco.id}/faces/{f.shortId}.jpg", "image/jpg", videoIndexerHelper);
@@ -166,7 +166,7 @@ namespace OrchestrationFunctions
 
      
 
-        private static async Task StoreBreakdownJsonInCosmos(VideoBreakdownPOCO videoBreakdownJson, TraceWriter log)
+        private static async Task StoreBreakdownJsonInCosmos(VideoBreakdown videoBreakdownJson, TraceWriter log)
         {
             //string CosmosCollectionName = ConfigurationManager.AppSettings["CosmosCollectionName"];
             //if (String.IsNullOrEmpty(CosmosCollectionName))
