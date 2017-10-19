@@ -11,7 +11,7 @@ namespace OrchestrationFunctions.AzureFunctions
     public static class AMSMoveTrigger
     {
         [FunctionName("AMSMoveTrigger")]
-        public static async Task Run([QueueTrigger("ams-move-queue", Connection = "AzureWebJobsStorage")]string myQueueItem, TraceWriter log)
+        public static async Task Run([QueueTrigger("%MoveQueue%", Connection = "AzureWebJobsStorage")]string myQueueItem, TraceWriter log)
         {
             try       
             {

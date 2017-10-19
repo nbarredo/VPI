@@ -24,7 +24,7 @@ namespace OrchestrationFunctions
         public static async Task<HttpResponseMessage> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "vicallback")]HttpRequestMessage req,
             TraceWriter log,
-            [Queue("vi-processing-complete", Connection = "AzureWebJobsStorage")] IAsyncCollector<string> outputQueue
+            [Queue("%VIProcessingCompleteQueue%", Connection = "AzureWebJobsStorage")] IAsyncCollector<string> outputQueue
             )
         {
             var baseHelper=new BaseHelper(log);

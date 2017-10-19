@@ -17,7 +17,7 @@ namespace OrchestrationFunctions
         public static async Task RunAsync([BlobTrigger("%AmsBlobInputContainer%/{name}.{extension}", Connection = 
             "AzureWebJobsStorage")] CloudBlockBlob inputVideoBlob,      // video blob that initiated this function
             [Blob("%AmsBlobInputContainer%/{name}.json", FileAccess.Read)] string manifestContents,  // if a json file with the same name exists, it's content will be in this variable.
-            [Queue("ams-input")] IAsyncCollector<string> outputQueue,   // output queue for async processing and resiliency
+            [Queue("%InputQueue%")] IAsyncCollector<string> outputQueue,   // output queue for async processing and resiliency
             TraceWriter log)
         {
             //================================================================================

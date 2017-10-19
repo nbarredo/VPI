@@ -32,7 +32,7 @@ namespace OrchestrationFunctions
         /// <param name="log"></param>
         [FunctionName("AMSNotificationQueueHandler")]
         public static async Task RunAsync(
-            [QueueTrigger("encoding-complete", Connection = "AzureWebJobsStorage")] string myQueueItem, TraceWriter log)
+            [QueueTrigger("%EncodingCompleteQueue%", Connection = "AzureWebJobsStorage")] string myQueueItem, TraceWriter log)
         {
             var videoIndexerHelper = new VideoIndexerHelper(log);
             var cosmosHelper = new CosmosHelper(log);

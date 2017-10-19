@@ -25,7 +25,7 @@ namespace OrchestrationFunctions
     {
         [FunctionName("VideoIndexerCompleteQueueHandler")]
         public static async Task RunAsync(
-            [QueueTrigger("vi-processing-complete", Connection = "AzureWebJobsStorage")] CloudQueueMessage myQueueItem,
+            [QueueTrigger("%VIProcessingCompleteQueue%", Connection = "AzureWebJobsStorage")] CloudQueueMessage myQueueItem,
             TraceWriter log)
         {
             var videoIndexerHelper=new VideoIndexerHelper(log);

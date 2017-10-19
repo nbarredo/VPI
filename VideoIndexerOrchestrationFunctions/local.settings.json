@@ -1,15 +1,19 @@
 {
   "IsEncrypted": false,
   "Values": {
-    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=vip3hho4ajmhdn4k;AccountKey=zmGV5903LzsbHg31IdaQsT+W3Kx2RV3oP5lwSFJLmirzSUtIdHxFCIIky0ExcDkm9nvzlLt6C1VabKE0eKRKyg==;EndpointSuffix=core.windows.net",
-    "AzureWebJobsDashboard": "DefaultEndpointsProtocol=https;AccountName=vip3hho4ajmhdn4k;AccountKey=zmGV5903LzsbHg31IdaQsT+W3Kx2RV3oP5lwSFJLmirzSUtIdHxFCIIky0ExcDkm9nvzlLt6C1VabKE0eKRKyg==;EndpointSuffix=core.windows.net",
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=pipelinedev;AccountKey=7tLM2o2URLQmuq75He8gbA7tHt28fol5ZEvLhUPjO3f68iwvsUWCr9TIDb9v7ayh6eYwOrAa70LeGeT0i46YFQ==;EndpointSuffix=core.windows.net",
+    "AzureWebJobsDashboard": "DefaultEndpointsProtocol=https;AccountName=pipelinedev;AccountKey=7tLM2o2URLQmuq75He8gbA7tHt28fol5ZEvLhUPjO3f68iwvsUWCr9TIDb9v7ayh6eYwOrAa70LeGeT0i46YFQ==;EndpointSuffix=core.windows.net",
     "VideoIndexerKey": "ff97d1a0c69643818d58f4d307ae3ae9",
-    "CosmosEndpoint": "https://vip3hho4ajmhdn4k.documents.azure.com:443/",
-    "CosmosKey": "kJoXIPm3NdwjAuOKFlB2568V0MYNXqS21KYpIDughk82QnaPRpYjH1JBBqKr3DpHuGVnEOQqg13nvAwRHKEHUw==",
+    "CosmosEndpoint": "https://vpi-cosmos-db-dev.documents.azure.com:443/",
+    "CosmosKey": "zo4XZpI4jiR7JgS4jTXYvH9YadUREhtLdqoMskWuTfk7XBcqfCQV2EbaInXU7uLypC1TlIJbHYXYtyienA3aWw",
     "CosmosDatabaseName": "VideoBreakdowns",
     "CosmosCollectionName": "Breakdowns",
     "DefaultLanguage": "Spanish",
     "VideoIndexerBlobInputContainer": "vi-input",
+    "InputQueue": "ams-input",
+    "MoveQueue": "ams-move-queue",
+    "EncodingCompleteQueue": "encoding-complete",
+    "VIProcessingCompleteQueue": "vi-processing-complete",
     "AmsBlobInputContainer": "ams-encoding-input",
     "AmsBlobToDeleteContainer": "ams-to-delete",
     "ExistingAmsBlobInputContainer": "ams-encoding-input-existing",
@@ -18,10 +22,10 @@
     // "MediaServicesNotificationWebhookUrl": "http://localhost:7071/api/amscallback",
     "MediaServicesNotificationWebhookUrl": "https://vip3hho4ajmhdn4k.azurewebsites.net/api/amscallback?code=slLhq/Kmmf6vkQvFv6PgpwCUDYqQpVmIRDJ5nPWOqCsBDiOcF22ysA==&clientId=default",
     "MediaServicesWebhookSigningKey": "j0txf1f8msjytzvpe40nxbpxdcxtqcgxy0nt",
-    "MediaServicesAccountName": "vip3hho4ajmhdn4k",
-    "MediaServicesAccountKey": "xbO0bXhBX6GEG5ocI7rHR/cxOOwr+Rsnq9LZwcQ7Gfc=",
-    "MediaServicesStorageAccountName": "vip3hho4ajmhdn4k",
-    "MediaServicesStorageAccountKey": "zmGV5903LzsbHg31IdaQsT+W3Kx2RV3oP5lwSFJLmirzSUtIdHxFCIIky0ExcDkm9nvzlLt6C1VabKE0eKRKyg=="
+    "MediaServicesAccountName": "amsenlacedev",
+    "MediaServicesAccountKey": "yZ3CveUx9dLymmGxfIY/VAZihAYh/AmdyltzhHDof/s=",
+    "MediaServicesStorageAccountName": "pipelinedev",
+    "MediaServicesStorageAccountKey": "7tLM2o2URLQmuq75He8gbA7tHt28fol5ZEvLhUPjO3f68iwvsUWCr9TIDb9v7ayh6eYwOrAa70LeGeT0i46YFQ"
 
 
   }

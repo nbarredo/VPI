@@ -26,7 +26,7 @@ namespace OrchestrationFunctions
 
 
         [FunctionName("AMSInputQueueHandler")]
-        public static async Task Run([QueueTrigger("ams-input", Connection = "AzureWebJobsStorage")] VippyProcessingState manifest,
+        public static async Task Run([QueueTrigger("%InputQueue%", Connection = "AzureWebJobsStorage")] VippyProcessingState manifest,
             [Blob("%AmsBlobInputContainer%/{BlobName}", FileAccess.ReadWrite)] CloudBlockBlob videoBlobTriggered,
             [Blob("%ExistingAmsBlobInputContainer%/{BlobName}", FileAccess.ReadWrite)] CloudBlockBlob videoBlobExisting,
 

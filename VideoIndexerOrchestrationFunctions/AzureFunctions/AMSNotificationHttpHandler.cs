@@ -11,7 +11,7 @@ namespace OrchestrationFunctions
         [FunctionName("AMSNotificationHttpHandler")]
         public static async Task<object> Run(
             [HttpTrigger(WebHookType = "genericJson", Route = "amscallback")] HttpRequestMessage req,
-            [Queue("encoding-complete", Connection = "AzureWebJobsStorage")] IAsyncCollector<string> outputQueue,
+            [Queue("%EncodingCompleteQueue%", Connection = "AzureWebJobsStorage")] IAsyncCollector<string> outputQueue,
             TraceWriter log)
         { 
             log.Info($"Webhook was triggered by {req.Headers.UserAgent}");
