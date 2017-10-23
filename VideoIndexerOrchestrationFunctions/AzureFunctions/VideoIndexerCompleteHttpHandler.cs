@@ -29,15 +29,16 @@ namespace OrchestrationFunctions
         {
             var baseHelper=new BaseHelper(log);
             baseHelper.LogMessage( "VideoIndexerCompleteHttpHandler function called");
-            //req.
-            //var queryParams = req.GetQueryNameValuePairs().ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase);
 
-            var jsonContent = await req.Content.ReadAsStringAsync();
-            //string queueJson =JsonConvert.SerializeObject(queryParams, Formatting.Indented);
+            var queryParams = req.GetQueryNameValuePairs().ToDictionary(kv => kv.Key, kv => kv.Value, StringComparer.OrdinalIgnoreCase);
 
-            await outputQueue.AddAsync(jsonContent);
 
-            return req.CreateResponse(HttpStatusCode.OK, jsonContent);
+            string queueJson = JsonConvert.SerializeObject(queryParams, Formatting.Indented);
+
+            log.Info($"sending json to queue : {queueJson}");
+            await outputQueue.AddAsync(queueJson);
+
+            return req.CreateResponse(HttpStatusCode.OK, queueJson);
         }
     }
 }

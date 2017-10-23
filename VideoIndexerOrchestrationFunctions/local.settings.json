@@ -17,7 +17,7 @@
     "AmsBlobInputContainer": "ams-encoding-input",
     "AmsBlobToDeleteContainer": "ams-to-delete",
     "ExistingAmsBlobInputContainer": "ams-encoding-input-existing",
-    "VideoIndexerCallbackUrl": "https://vpi-pipeline-dev.azurewebsites.net/vicallback",
+    "VideoIndexerCallbackUrl": "https://vpi-pipeline-dev.azurewebsites.net/api/vicallback",
     // "VideoIndexerCallbackUrl": "http://localhost:7071/api/vicallback",
     // "MediaServicesNotificationWebhookUrl": "http://localhost:7071/api/amscallback",
     "MediaServicesNotificationWebhookUrl": "https://vpi-pipeline-dev.azurewebsites.net/api/amscallback?code=7TKYoTKBRhqLLgCa7yJGJM4ohqSo9KtL2ETfSIlRQaHlN0IV1HClcg==&clientId=default",
