@@ -35,7 +35,7 @@ namespace OrchestrationFunctions
 
             string queueJson = JsonConvert.SerializeObject(queryParams, Formatting.Indented);
 
-            log.Info($"sending json to queue : {queueJson}");
+            baseHelper.LogMessage($"sending json to queue : {queueJson}");
             await outputQueue.AddAsync(queueJson);
 
             return req.CreateResponse(HttpStatusCode.OK, queueJson);
