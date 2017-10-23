@@ -131,7 +131,7 @@ namespace OrchestrationFunctions
                 }
 
             task.TaskNotificationSubscriptions.AddNew(NotificationJobState.FinalStatesOnly, endpoint, false);
-
+            cosmosHelper.LogMessage($"Add an output asset to contain the results of the job");
             // Add an output asset to contain the results of the job. 
             // This output is specified as AssetCreationOptions.None, which 
             // means the output asset is not encrypted. 
@@ -139,7 +139,7 @@ namespace OrchestrationFunctions
 
             // Starts the job in AMS.  AMS will notify the webhook when it completes
             job.Submit();
-
+            cosmosHelper.LogMessage($"Saving on cosmos DB");
             // update processing progress with id and metadata payload
             await cosmosHelper.StoreProcessingStateRecordInCosmosAsync(manifest);
 
