@@ -114,11 +114,11 @@ namespace OrchestrationFunctions
             var existingEndpoint = context.NotificationEndPoints.Where(e => e.Name == "FunctionWebHook").FirstOrDefault();
             INotificationEndPoint endpoint;
 
-            if (existingEndpoint != null)
-            {
-                endpoint = existingEndpoint;
-            }
-            else
+            //if (existingEndpoint != null)
+            //{
+            //    endpoint = existingEndpoint;
+            //}
+            //else
                 try
                 {
                     endpoint = context.NotificationEndPoints.Create("FunctionWebHook",
