@@ -5,8 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.DocumentDB" Version="1.18.0" />
-    <PackageReference Include="WindowsAzure.Storage" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Azure.DocumentDB" Version="1.17.0" />
   </ItemGroup>
 
   <ItemGroup>
