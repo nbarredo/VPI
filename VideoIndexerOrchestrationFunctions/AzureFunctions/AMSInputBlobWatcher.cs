@@ -41,7 +41,17 @@ namespace OrchestrationFunctions
             if (inputVideoBlob.Name.ToLower().EndsWith(".json"))
                 return;
 
-            await FunctionHelper.ProcessBlogIntoQueue(inputVideoBlob, manifestContents, outputQueue, log, Enums.OriginEnum.Trigger);
+            try
+            {
+                await FunctionHelper.ProcessBlogIntoQueue(inputVideoBlob, manifestContents, outputQueue, log, Enums.OriginEnum.Trigger);
+
+            }
+            catch (Exception )
+            {
+                log.Error($"Failed to process blob with name {inputVideoBlob.Name}");
+                throw;
+            }
+            
         }
 
         

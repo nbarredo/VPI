@@ -14,6 +14,7 @@
     "MoveQueue": "ams-move-queue",
     "EncodingCompleteQueue": "encoding-complete",
     "VIProcessingCompleteQueue": "vi-processing-complete",
+    "FailedContainer": "failed-container",
     "AmsBlobInputContainer": "ams-encoding-input",
     "AmsBlobToDeleteContainer": "ams-to-delete",
     "ExistingAmsBlobInputContainer": "ams-encoding-input-existing",

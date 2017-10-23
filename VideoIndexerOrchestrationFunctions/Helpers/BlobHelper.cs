@@ -30,13 +30,7 @@ namespace OrchestrationFunctions
         internal static List<BlobInfo> GetBlobInfo(string sourceContainer)
         {
             var blobInfoList = new List<BlobInfo>();
-            CloudBlobClient sourceCloudBlobClient = _amstorageAccount.CreateCloudBlobClient(); 
-            CloudBlobContainer container = sourceCloudBlobClient.GetContainerReference(sourceContainer);
-            var blobList = container.ListBlobs()
-                .Where(b => b.GetType() == typeof(CloudBlockBlob))
-                .Cast<CloudBlockBlob>()
-
-                .ToList();
+            List<CloudBlockBlob> blobList = GetBlobList(sourceContainer);
             if (blobList.Count == 0)
             {
                 return null;
@@ -53,6 +47,17 @@ namespace OrchestrationFunctions
                 blobInfoList.Add(blobInfo);
             }
             return blobInfoList;
+        }
+
+        internal static List<CloudBlockBlob> GetBlobList(string sourceContainer)
+        {
+            CloudBlobClient sourceCloudBlobClient = _amstorageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = sourceCloudBlobClient.GetContainerReference(sourceContainer);
+            var blobList = container.ListBlobs()
+                .Where(b => b.GetType() == typeof(CloudBlockBlob))
+                .Cast<CloudBlockBlob>()
+                .ToList();
+            return blobList;
         }
 
         private static CloudStorageAccount _amstorageAccount;
