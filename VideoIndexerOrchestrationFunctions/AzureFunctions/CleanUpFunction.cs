@@ -15,14 +15,17 @@ namespace OrchestrationFunctions.AzureFunctions
             {
                 log.Info($"C# Queue trigger function processed: {myQueueItem}");
                 var message = JsonConvert.DeserializeObject<DeleteMessage>(myQueueItem);
-                if (message.DeleteAll)
+                if (!message.DeleteAll) return;
+                var blobList = BlobHelper.GetBlobList(message.TargetContainer);
+                foreach (var blob in blobList)
                 {
-                    var blobList = BlobHelper.GetBlobList(message.TargetContainer);
-                    foreach (var blob in blobList)
-                    {
-                        blob.DeleteIfExistsAsync();
-                    }
+                    blob.DeleteIfExistsAsync();
                 }
+            }
+            catch (Exception ex)
+            {
+                log.Error($"Error on clean up function exception message: {ex.Message}");
+                throw;
             }
         }
     }
